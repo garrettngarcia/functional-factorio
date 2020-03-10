@@ -2,10 +2,10 @@
 
 *Goal*: Implement Lean Manufacturing in Factorio
 
-The goal of this project is to use the ideas of recursion and functional programming to create a just-in-time/lean manufacturing system in vanilla Factorio.  This will allow me to do cool things like take a 5 rocket/hour factory and tell it to fire one rocket/hour and get that exactly.  It'll also allow me to do that without mining any more ore than is absolutely necessary. This means I need to mean the following design goals:
+The goal of this project is to use the ideas of recursion and functional programming to create a just-in-time/lean manufacturing system in vanilla Factorio.  This will allow me to do cool things like take a 5 rocket/hour factory and tell it to fire one rocket/hour and get that exactly.  It'll also allow me to do that without mining any more ore than is absolutely necessary. This is also a design that can be easily incorporated into existing bases.  This means I need to meet the following design goals:
 
 ## Design Goals
-* Pull-system: Don't start new work until there is a request for it.
+* Pull-system: Only start new work if there is a specific request for it.
 * Avoid waste:
   * unnecessary transportation
   * excess inventory/overproduction
@@ -45,17 +45,17 @@ It receives orders from other stations via pulses on the red demand network (rig
 
 The station also registers itself on the information network (right terminal green) via a constant combinator with its product as the signal.
 
-One of the great things about Functional Factorio is that we don't care what the throughput of a given station is, so no more calculating exact ratios.  Though you should be aware that your production of a given product is limited by its slowest station.  For example, if you have a 4 GC station and a 1 GC station, they will each receive half of the total order, and we will need to wait for the slow station to finish either way to fulfill the order.  It's actually faster in this situation to just remove the slower station.
+One of the great things about Functional Factorio is that we don't care what the throughput of a given station is, so no more calculating exact ratios.  Though you should be aware that your production of a given product is limited by its slowest station.  For example, if you have a 4 GC/second station and a 1 GC/second station, they will each receive half of the total order, and we will need to wait for the slow station to finish either way to fulfill the order.  It's actually faster in this situation to just remove the slower station.
 
-The station should always manufacture everything the ingredients allow and send them on down the line, whether by logistics network, train, or conveyer.
+The station should always manufacture everything the ingredients allow and send the products on down the line, whether by logistics network, train, or conveyer.
 
-It should be noted that the SCU's memory cells will integer overflow if you order enough.  They can be reset by pulsing "R=1" on the information network.
+It should be noted that the SCU's memory cells will integer overflow if you order enough products.  They can be reset by pulsing "R=1" on the information network.  Just keep in mind that this also voids out a station's internal knowledge of how many ingredients have been overdelivered or underdelivered.
 
-Here is a screenshot of a 2 ingredient station:
-![2 ingredient station screenshot][2-screenshot]]
+![2 ingredient station screenshot][2-screenshot]
+*Screenshot of a 2 ingredient station*
 
-Here is the wire diagram for its SCU
-![2 ingredient station wire diagram][2-wire]]
+![2 ingredient station wire diagram][2-wire]
+*Wire diagram of a 2 ingredient station control unit*
 
 To program the SCU, put the product in the left constant combinator, the recipe in the right constant combinator, and modify the other combinators accordingly.  You will need to add three more arithmetic combinators per ingredient wired in parallel with the two signal isolators and per-supplier orderer.  The blueprint book in this repository has examples of 2 and 3 ingredient SCU's.
 
@@ -68,7 +68,7 @@ If you use productivity modules, you'll have overproduction unless you account f
 In my prototype, I used barrels to transport fluids into and out of stations.  Since you can't get pulse reads on pipes, it'd be tough to get accurate information without some tanks and magical math.  I'll leave that as an exercise for the reader :-)
 
 ### Central controls
-It may be useful to have a "central control center" with all of the knobs and dials you use to run your factory.  Every control center should have a reset pulser (green network) and an order pulser (red network).  Most others will also want a clock pulser so that you can trigger a rocket launch every hour, for example.
+It may be useful to have a "central control center" with all of the knobs and dials you use to run your factory.  Every control center should at least have a reset pulser (green network) and an order pulser (red network).  Most others will also want a clock pulser so that you can trigger a rocket launch every hour, for example.
 
 ### Limitations
 Oil Refining: The SCU will not work as designed with any station that produces more than one type of product.  This situation can come up during oil refining.  The best way around it currently is to design your refinery so that each station only produces a single output (ie. petroleum gas or plastic).
