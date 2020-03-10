@@ -73,5 +73,9 @@ It may be useful to have a "central control center" with all of the knobs and di
 ### Limitations
 Oil Refining: The SCU will not work as designed with any station that produces more than one type of product.  This situation can come up during oil refining.  The best way around it currently is to design your refinery so that each station only produces a single output (ie. petroleum gas or plastic).
 
+**Github Repo**: https://github.com/garrettngarcia/functional-factorio
+
+**Factorio Prints Page**: https://factorioprints.com/view/-M21CcICFTPPvl1bHIRa
+
 [2-screenshot]: https://github.com/garrettngarcia/functional-factorio/raw/master/2_ingredient_station.png "2 ingredient station screenshot"
 [2-wire]: https://github.com/garrettngarcia/functional-factorio/raw/master/2_ingredient_station_design.png "2 ingredient station wire diagram"
