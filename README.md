@@ -32,6 +32,7 @@ A station has two parts: a station control unit and a sections of factory that i
 
 You may want to have each station surrounded by walls and turrets both for defense and ease of telling one from the other.
 
+
 **Station Control Unit**
 
 A station has a left terminal and a right terminal: large electric poles.  The left terminal contains the station's internal networks, both red and green.  The right terminal is the station's link to the world:  both red and green networks.  The left terminal should NEVER be connected to an external circuit network.
@@ -45,9 +46,18 @@ It receives orders from other stations via pulses on the red demand network (rig
 The station also registers itself on the information network (right terminal green) via a constant combinator with its product as the signal.
 
 One of the great things about Functional Factorio is that we don't care what the throughput of a given station is, so no more calculating exact ratios.  Though you should be aware that your production of a given product is limited by its slowest station.  For example, if you have a 4 GC station and a 1 GC station, they will each receive half of the total order, and we will need to wait for the slow station to finish either way to fulfill the order.  It's actually faster in this situation to just remove the slower station.
+
 The station should always manufacture everything the ingredients allow and send them on down the line, whether by logistics network, train, or conveyer.
 
 It should be noted that the SCU's memory cells will integer overflow if you order enough.  They can be reset by pulsing "R=1" on the information network.
+
+Here is a screenshot of a 2 ingredient station:
+![2 ingredient station screenshot][2-screenshot]]
+
+Here is the wire diagram for its SCU
+![2 ingredient station wire diagram][2-wire]]
+
+To program the SCU, put the product in the left constant combinator, the recipe in the right constant combinator, and modify the other combinators accordingly.  You will need to add three more arithmetic combinators per ingredient wired in parallel with the two signal isolators and per-supplier orderer.  The blueprint book in this repository has examples of 2 and 3 ingredient SCU's.
 
 **Station Floor**
 
@@ -62,3 +72,6 @@ It may be useful to have a "central control center" with all of the knobs and di
 
 ### Limitations
 Oil Refining: The SCU will not work as designed with any station that produces more than one type of product.  This situation can come up during oil refining.  The best way around it currently is to design your refinery so that each station only produces a single output (ie. petroleum gas or plastic).
+
+[2-screenshot]: https://github.com/garrettngarcia/functional-factorio/raw/master/2_ingredient_station.png "2 ingredient station screenshot"
+[2-wire]: https://github.com/garrettngarcia/functional-factorio/raw/master/2_ingredient_station_design.png "2 ingredient station wire diagram"
